@@ -1,33 +1,28 @@
 package com.gyl.CrudGyl.controlador;
 
-import com.gyl.CrudGyl.dto.ProductoRequestDto;
-import com.gyl.CrudGyl.dto.ProductoResponseDto;
-import com.gyl.CrudGyl.servicio.ProductoServicio;
+import java.util.List;
+
 import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.List;
+import com.gyl.CrudGyl.dto.ProductoRequestDto;
+import com.gyl.CrudGyl.dto.ProductoResponseDto;
+import com.gyl.CrudGyl.servicio.ProductoServicio;
 
 @RestController
 @RequestMapping("/api/productos")
 public class ProductoControlador {
     private final ProductoServicio productoServicio;
 
-    public ProductoControlador(ProductoServicio productoServicio) {
-        this.productoServicio = productoServicio;
-    }
+    public ProductoControlador(ProductoServicio productoServicio) {this.productoServicio = productoServicio;}
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    public ProductoResponseDto crear(@Valid @RequestBody ProductoRequestDto dto) {
-        return productoServicio.crear(dto);
-    }
+    public ProductoResponseDto crear(@Valid @RequestBody ProductoRequestDto dto) {return productoServicio.crear(dto);}
 
     @GetMapping
-    public List<ProductoResponseDto> listar() {
-        return productoServicio.listar();
-    }
+    public List<ProductoResponseDto> listar() {return productoServicio.listar();}
 
     @GetMapping("/{idBuscado}")
     public ProductoResponseDto buscarPorId(@PathVariable Long idBuscado) {

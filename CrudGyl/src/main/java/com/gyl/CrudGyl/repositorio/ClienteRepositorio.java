@@ -5,9 +5,9 @@ import java.util.List;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
-import com.gyl.CrudGyl.entidad.Producto;
+import com.gyl.CrudGyl.entidad.Cliente;
 
 @Repository
-public interface ProductoRepositorio extends JpaRepository<Producto, Long> {
-    List<Producto> findByNombre(String nombreBuscado);
+public interface ClienteRepositorio extends JpaRepository<Cliente, Long> {
+    List<Cliente> findByNombre(String nombreBuscado);
 }

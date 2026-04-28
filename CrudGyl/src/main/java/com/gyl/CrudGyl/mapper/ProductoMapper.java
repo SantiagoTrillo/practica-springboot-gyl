@@ -5,9 +5,7 @@ import com.gyl.CrudGyl.dto.ProductoResponseDto;
 import com.gyl.CrudGyl.entidad.Producto;
 
 public class ProductoMapper {
-    private ProductoMapper() {
-
-    }
+    private ProductoMapper() {}
 
     public static Producto toEntity(ProductoRequestDto dto) {
         Producto producto = new Producto();

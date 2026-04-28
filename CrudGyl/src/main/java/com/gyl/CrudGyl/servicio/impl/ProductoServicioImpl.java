@@ -24,6 +24,7 @@ public class ProductoServicioImpl implements ProductoServicio {
     public ProductoResponseDto crear(ProductoRequestDto dto) {
         Producto productoTraducido = ProductoMapper.toEntity(dto);
         Producto productoGuardado = productoRepositorio.save(productoTraducido);
+
         return ProductoMapper.toResponseDto(productoGuardado);
     }
 
@@ -34,7 +35,8 @@ public class ProductoServicioImpl implements ProductoServicio {
 
     @Override
     public ProductoResponseDto buscarPorId(Long idBuscado) {
-        return productoRepositorio.findById(idBuscado).map(ProductoMapper::toResponseDto).orElseThrow(() -> new ExcepcionRecursoNoEncontrado("No se encontró el id " + idBuscado));
+        return productoRepositorio.findById(idBuscado).map(ProductoMapper::toResponseDto)
+                .orElseThrow(() -> new ExcepcionRecursoNoEncontrado("No se encontró el id " + idBuscado));
     }
 
     @Override
@@ -43,17 +45,19 @@ public class ProductoServicioImpl implements ProductoServicio {
     }
 
     @Override
-    public ProductoResponseDto actualizar(Long id, ProductoRequestDto dto) {
-        Producto producto = productoRepositorio.findById(id).orElseThrow(() -> new ExcepcionRecursoNoEncontrado("No se encontró el id " + id));
-        ProductoMapper.actualizarEntidad(producto, dto);
-        Producto productoGuardado = productoRepositorio.save(producto);
+    public ProductoResponseDto actualizar(Long idBuscado, ProductoRequestDto dto) {
+        Producto productoBuscado = productoRepositorio.findById(idBuscado)
+                .orElseThrow(() -> new ExcepcionRecursoNoEncontrado("No se encontró el id " + idBuscado));
+        ProductoMapper.actualizarEntidad(productoBuscado, dto);
+        Producto productoGuardado = productoRepositorio.save(productoBuscado);
 
         return ProductoMapper.toResponseDto(productoGuardado);
     }
 
     @Override
-    public void eliminar(Long id) {
-        Producto producto = productoRepositorio.findById(id).orElseThrow(() -> new ExcepcionRecursoNoEncontrado("No se encontró el id " + id));
-        productoRepositorio.delete(producto);
+    public void eliminar(Long idBuscado) {
+        Producto productoBuscado = productoRepositorio.findById(idBuscado)
+                .orElseThrow(() -> new ExcepcionRecursoNoEncontrado("No se encontró el id " + idBuscado));
+        productoRepositorio.delete(productoBuscado);
     }
 }

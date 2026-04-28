@@ -14,7 +14,7 @@ public interface ProductoServicio {
 
     List<ProductoResponseDto> buscarPorNombre(String nombreBuscado);
 
-    ProductoResponseDto actualizar(Long id, ProductoRequestDto dto);
+    ProductoResponseDto actualizar(Long idBuscado, ProductoRequestDto dto);
 
-    void eliminar(Long id);
+    void eliminar(Long idBuscado);
 }
