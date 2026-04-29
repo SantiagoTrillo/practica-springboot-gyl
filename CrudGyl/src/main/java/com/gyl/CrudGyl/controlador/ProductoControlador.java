@@ -19,9 +19,7 @@ public class ProductoControlador {
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    public ProductoResponseDto crear(@Valid @RequestBody ProductoRequestDto dto) {
-        return productoServicio.crear(dto);
-    }
+    public ProductoResponseDto crear(@Valid @RequestBody ProductoRequestDto dto) {return productoServicio.crear(dto);}
 
     @GetMapping
     public List<ProductoResponseDto> listar() {return productoServicio.listar();}
