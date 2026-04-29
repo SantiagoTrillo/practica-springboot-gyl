@@ -47,7 +47,7 @@ public class VentaServicioImpl implements VentaServicio {
     }
 
     @Override
-    public List<VentaResponseDto> buscarPorFechaVenta(LocalDateTime fechaVentaBuscada) {
+        public List<VentaResponseDto> buscarPorFechaVenta(LocalDateTime fechaVentaBuscada) {
         return ventaRepositorio.findByFechaVenta(fechaVentaBuscada).stream().map(VentaMapper::toResponseDto).toList();
     }
 

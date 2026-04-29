@@ -2,4 +2,6 @@ package com.gyl.CrudGyl.dto;
 
 import java.time.LocalDateTime;
 
-public record VentaResponseDto(Long id, LocalDateTime fechaVenta, Double total, Long idCliente) {}
+import com.fasterxml.jackson.annotation.JsonFormat;
+
+public record VentaResponseDto(Long id, @JsonFormat(pattern = "yyyy-MM-dd HH:mm") LocalDateTime fechaVenta, Double total, Long idCliente) {}
