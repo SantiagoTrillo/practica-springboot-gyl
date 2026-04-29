@@ -16,9 +16,7 @@ import com.gyl.CrudGyl.servicio.ClienteServicio;
 public class ClienteServicioImpl implements ClienteServicio {
     private final ClienteRepositorio clienteRepositorio;
 
-    public ClienteServicioImpl(ClienteRepositorio clienteRepositorio) {
-        this.clienteRepositorio = clienteRepositorio;
-    }
+    public ClienteServicioImpl(ClienteRepositorio clienteRepositorio) {this.clienteRepositorio = clienteRepositorio;}
 
     @Override
     public ClienteResponseDto crear(ClienteRequestDto dto) {
@@ -49,9 +47,9 @@ public class ClienteServicioImpl implements ClienteServicio {
         Cliente clienteBuscado = clienteRepositorio.findById(idBuscado)
                 .orElseThrow(() -> new ExcepcionRecursoNoEncontrado("No se encontró el id " + idBuscado));
         ClienteMapper.actualizarEntidad(clienteBuscado, dto);
-        Cliente clienteGuardado = clienteRepositorio.save(clienteBuscado);
+        Cliente clienteActualizado = clienteRepositorio.save(clienteBuscado);
 
-        return ClienteMapper.toResponseDto(clienteGuardado);
+        return ClienteMapper.toResponseDto(clienteActualizado);
     }
 
     @Override
