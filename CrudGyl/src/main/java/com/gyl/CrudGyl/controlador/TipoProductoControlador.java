@@ -38,7 +38,7 @@ public class TipoProductoControlador {
         return tipoProductoServicio.buscarPorNombre(nombre);
     }
 
-    @PostMapping("/{idBuscado}")
+    @PutMapping("/{idBuscado}")
     public TipoProductoResponseDto actualizar(@PathVariable Long idBuscado,
                                               @Valid @RequestBody TipoProductoRequestDto dto) {
         return tipoProductoServicio.actualizar(idBuscado, dto);

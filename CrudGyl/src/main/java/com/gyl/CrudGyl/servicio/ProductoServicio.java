@@ -4,10 +4,9 @@ import java.util.List;
 
 import com.gyl.CrudGyl.dto.ProductoRequestDto;
 import com.gyl.CrudGyl.dto.ProductoResponseDto;
-import com.gyl.CrudGyl.entidad.TipoProducto;
 
 public interface ProductoServicio {
-    ProductoResponseDto crear(ProductoRequestDto dto, TipoProducto tipoProducto);
+    ProductoResponseDto crear(ProductoRequestDto dto);
 
     List<ProductoResponseDto> listar();
 
@@ -15,7 +14,7 @@ public interface ProductoServicio {
 
     List<ProductoResponseDto> buscarPorNombre(String nombreBuscado);
 
-    ProductoResponseDto actualizar(Long idBuscado, ProductoRequestDto dto, TipoProducto tipoProducto);
+    ProductoResponseDto actualizar(Long idBuscado, ProductoRequestDto dto);
 
     void eliminar(Long idBuscado);
 }

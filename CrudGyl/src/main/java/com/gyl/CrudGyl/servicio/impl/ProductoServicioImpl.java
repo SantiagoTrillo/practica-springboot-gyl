@@ -2,10 +2,11 @@ package com.gyl.CrudGyl.servicio.impl;
 
 import java.util.List;
 
+import com.gyl.CrudGyl.entidad.TipoProducto;
+import com.gyl.CrudGyl.repositorio.TipoProductoRepositorio;
 import org.springframework.stereotype.Service;
 
 import com.gyl.CrudGyl.entidad.Producto;
-import com.gyl.CrudGyl.entidad.TipoProducto;
 import com.gyl.CrudGyl.excepcion.ExcepcionRecursoNoEncontrado;
 import com.gyl.CrudGyl.mapper.ProductoMapper;
 import com.gyl.CrudGyl.repositorio.ProductoRepositorio;
@@ -16,14 +17,21 @@ import com.gyl.CrudGyl.servicio.ProductoServicio;
 @Service
 public class ProductoServicioImpl implements ProductoServicio {
     private final ProductoRepositorio productoRepositorio;
+    private final TipoProductoRepositorio tipoProductoRepositorio;
 
-    public ProductoServicioImpl(ProductoRepositorio productoRepositorio) {
+    public ProductoServicioImpl(ProductoRepositorio productoRepositorio,
+                                TipoProductoRepositorio tipoProductoRepositorio) {
         this.productoRepositorio = productoRepositorio;
+        this.tipoProductoRepositorio = tipoProductoRepositorio;
     }
 
     @Override
-    public ProductoResponseDto crear(ProductoRequestDto dto, TipoProducto tipoProducto) {
-        Producto productoTraducido = ProductoMapper.toEntity(dto, tipoProducto);
+    public ProductoResponseDto crear(ProductoRequestDto dto) {
+        TipoProducto tipoProductoBuscado = tipoProductoRepositorio.findById(dto.idTipoProducto())
+                .orElseThrow(() -> new ExcepcionRecursoNoEncontrado(
+                        "No se encontró el id " + dto.idTipoProducto())
+                );
+        Producto productoTraducido = ProductoMapper.toEntity(dto, tipoProductoBuscado);
         Producto productoGuardado = productoRepositorio.save(productoTraducido);
 
         return ProductoMapper.toResponseDto(productoGuardado);
@@ -46,10 +54,14 @@ public class ProductoServicioImpl implements ProductoServicio {
     }
 
     @Override
-    public ProductoResponseDto actualizar(Long idBuscado, ProductoRequestDto dto, TipoProducto tipoProducto) {
+    public ProductoResponseDto actualizar(Long idBuscado, ProductoRequestDto dto) {
         Producto productoBuscado = productoRepositorio.findById(idBuscado)
                 .orElseThrow(() -> new ExcepcionRecursoNoEncontrado("No se encontró el id " + idBuscado));
-        ProductoMapper.actualizarEntidad(productoBuscado, dto, tipoProducto);
+        TipoProducto tipoProductoBuscado = tipoProductoRepositorio.findById(dto.idTipoProducto())
+                .orElseThrow(() -> new ExcepcionRecursoNoEncontrado(
+                        "No se encontró el id " + dto.idTipoProducto())
+                );
+        ProductoMapper.actualizarEntidad(productoBuscado, dto, tipoProductoBuscado);
         Producto productoGuardado = productoRepositorio.save(productoBuscado);
 
         return ProductoMapper.toResponseDto(productoGuardado);

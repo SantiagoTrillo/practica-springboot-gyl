@@ -34,7 +34,7 @@ public class ClienteControlador {
         return clienteServicio.buscarPorNombre(nombre);
     }
 
-    @PostMapping("/{idBuscado}")
+    @PutMapping("/{idBuscado}")
     public ClienteResponseDto actualizar(@PathVariable Long idBuscado, @Valid @RequestBody ClienteRequestDto dto) {
         return clienteServicio.actualizar(idBuscado, dto);
     }

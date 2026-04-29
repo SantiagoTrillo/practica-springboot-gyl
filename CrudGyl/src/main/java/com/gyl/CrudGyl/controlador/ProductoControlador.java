@@ -2,7 +2,6 @@ package com.gyl.CrudGyl.controlador;
 
 import java.util.List;
 
-import com.gyl.CrudGyl.entidad.TipoProducto;
 import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
@@ -20,8 +19,8 @@ public class ProductoControlador {
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    public ProductoResponseDto crear(@Valid @RequestBody ProductoRequestDto dto, TipoProducto tipoProducto) {
-        return productoServicio.crear(dto, tipoProducto);
+    public ProductoResponseDto crear(@Valid @RequestBody ProductoRequestDto dto) {
+        return productoServicio.crear(dto);
     }
 
     @GetMapping
@@ -37,9 +36,9 @@ public class ProductoControlador {
         return productoServicio.buscarPorNombre(nombre);
     }
 
-    @PostMapping("/{idBuscado}")
-    public ProductoResponseDto actualizar(@PathVariable Long idBuscado, @Valid @RequestBody ProductoRequestDto dto, TipoProducto tipoProducto) {
-        return productoServicio.actualizar(idBuscado, dto, tipoProducto);
+    @PutMapping("/{idBuscado}")
+    public ProductoResponseDto actualizar(@PathVariable Long idBuscado, @Valid @RequestBody ProductoRequestDto dto) {
+        return productoServicio.actualizar(idBuscado, dto);
     }
 
     @DeleteMapping("/{idBuscado}")
