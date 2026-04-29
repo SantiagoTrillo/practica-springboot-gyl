@@ -5,6 +5,7 @@ import java.util.List;
 import org.springframework.stereotype.Service;
 
 import com.gyl.CrudGyl.entidad.Producto;
+import com.gyl.CrudGyl.entidad.TipoProducto;
 import com.gyl.CrudGyl.excepcion.ExcepcionRecursoNoEncontrado;
 import com.gyl.CrudGyl.mapper.ProductoMapper;
 import com.gyl.CrudGyl.repositorio.ProductoRepositorio;
@@ -21,8 +22,8 @@ public class ProductoServicioImpl implements ProductoServicio {
     }
 
     @Override
-    public ProductoResponseDto crear(ProductoRequestDto dto) {
-        Producto productoTraducido = ProductoMapper.toEntity(dto);
+    public ProductoResponseDto crear(ProductoRequestDto dto, TipoProducto tipoProducto) {
+        Producto productoTraducido = ProductoMapper.toEntity(dto, tipoProducto);
         Producto productoGuardado = productoRepositorio.save(productoTraducido);
 
         return ProductoMapper.toResponseDto(productoGuardado);
@@ -45,10 +46,10 @@ public class ProductoServicioImpl implements ProductoServicio {
     }
 
     @Override
-    public ProductoResponseDto actualizar(Long idBuscado, ProductoRequestDto dto) {
+    public ProductoResponseDto actualizar(Long idBuscado, ProductoRequestDto dto, TipoProducto tipoProducto) {
         Producto productoBuscado = productoRepositorio.findById(idBuscado)
                 .orElseThrow(() -> new ExcepcionRecursoNoEncontrado("No se encontró el id " + idBuscado));
-        ProductoMapper.actualizarEntidad(productoBuscado, dto);
+        ProductoMapper.actualizarEntidad(productoBuscado, dto, tipoProducto);
         Producto productoGuardado = productoRepositorio.save(productoBuscado);
 
         return ProductoMapper.toResponseDto(productoGuardado);

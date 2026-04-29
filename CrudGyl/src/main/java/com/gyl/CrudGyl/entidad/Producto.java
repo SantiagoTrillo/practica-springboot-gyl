@@ -22,4 +22,6 @@ public class Producto {
     private Double precio;
     @Column(nullable = false)
     private Integer stock;
+    @ManyToOne(optional = false) @JoinColumn(name = "id_tipo_producto", nullable = false)
+    private TipoProducto tipoProducto;
 }
