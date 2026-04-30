@@ -7,7 +7,7 @@ import com.gyl.CrudGyl.entidad.Cliente;
 import com.gyl.CrudGyl.entidad.DetalleVenta;
 import com.gyl.CrudGyl.entidad.Producto;
 import com.gyl.CrudGyl.entidad.Venta;
-import com.gyl.CrudGyl.excepcion.RecursoDuplicadoExepcion;
+import com.gyl.CrudGyl.excepcion.RecursoDuplicadoExcepcion;
 import com.gyl.CrudGyl.excepcion.RecursoInsuficienteExcepcion;
 import com.gyl.CrudGyl.excepcion.RecursoNoEncontradoExcepcion;
 import com.gyl.CrudGyl.mapper.DetalleVentaMapper;
@@ -104,7 +104,7 @@ public class VentaServicioImpl implements VentaServicio {
             Long idIterado = detallesVenta.get(i).idProducto();
             for (int j = i + 1; j < detallesVenta.size(); j++) {
                 if (idIterado.equals(detallesVenta.get(j).idProducto())) {
-                    throw new RecursoDuplicadoExepcion(
+                    throw new RecursoDuplicadoExcepcion(
                             "El producto con id " + idIterado + " está repetido en la venta"
                     );
                 }
