@@ -11,7 +11,6 @@ public class VentaMapper {
     public static Venta toEntity(VentaRequestDto dto, Cliente cliente) {
         Venta venta = new Venta();
 
-        venta.setTotal(dto.total());
         venta.setCliente(cliente);
 
         return venta;
@@ -19,11 +18,8 @@ public class VentaMapper {
 
     public static VentaResponseDto toResponseDto(Venta venta) {
         Long idCliente = venta.getCliente() != null ? venta.getCliente().getId() : null;
-        return new VentaResponseDto(venta.getId(), venta.getFechaVenta(), venta.getTotal(), idCliente);
-    }
 
-    public static void actualizarEntidad(Venta venta, VentaRequestDto dto, Cliente cliente) {
-        venta.setTotal(dto.total());
-        venta.setCliente(cliente);
+        return new VentaResponseDto(venta.getId(), venta.getFechaVenta(), venta.getTotal(), idCliente,
+                                    venta.getDetallesVenta().stream().map(DetalleVentaMapper::toResponseDto).toList());
     }
 }

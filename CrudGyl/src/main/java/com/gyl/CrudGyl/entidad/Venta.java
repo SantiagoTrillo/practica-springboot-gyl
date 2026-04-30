@@ -1,13 +1,14 @@
 package com.gyl.CrudGyl.entidad;
 
+import java.time.LocalDateTime;
+import java.util.List;
+
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.hibernate.annotations.CreationTimestamp;
-
-import java.time.LocalDateTime;
 
 @Entity
 @Table(name = "ventas")
@@ -27,4 +28,6 @@ public class Venta {
     @ManyToOne
     @JoinColumn(name = "id_cliente")
     private Cliente cliente;
+    @OneToMany(mappedBy = "venta")
+    private List<DetalleVenta> detallesVenta;
 }
