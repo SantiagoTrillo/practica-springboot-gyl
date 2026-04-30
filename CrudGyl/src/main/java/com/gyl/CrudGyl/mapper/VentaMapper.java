@@ -1,6 +1,5 @@
 package com.gyl.CrudGyl.mapper;
 
-import com.gyl.CrudGyl.dto.VentaRequestDto;
 import com.gyl.CrudGyl.dto.VentaResponseDto;
 import com.gyl.CrudGyl.entidad.Cliente;
 import com.gyl.CrudGyl.entidad.Venta;
@@ -8,7 +7,7 @@ import com.gyl.CrudGyl.entidad.Venta;
 public class VentaMapper {
     public VentaMapper() {}
 
-    public static Venta toEntity(VentaRequestDto dto, Cliente cliente) {
+    public static Venta toEntity(Cliente cliente) {
         Venta venta = new Venta();
 
         venta.setCliente(cliente);

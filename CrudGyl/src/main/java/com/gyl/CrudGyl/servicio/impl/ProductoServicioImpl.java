@@ -8,7 +8,7 @@ import com.gyl.CrudGyl.dto.ProductoRequestDto;
 import com.gyl.CrudGyl.dto.ProductoResponseDto;
 import com.gyl.CrudGyl.entidad.Producto;
 import com.gyl.CrudGyl.entidad.TipoProducto;
-import com.gyl.CrudGyl.excepcion.ExcepcionRecursoNoEncontrado;
+import com.gyl.CrudGyl.excepcion.RecursoNoEncontradoExcepcion;
 import com.gyl.CrudGyl.mapper.ProductoMapper;
 import com.gyl.CrudGyl.repositorio.ProductoRepositorio;
 import com.gyl.CrudGyl.repositorio.TipoProductoRepositorio;
@@ -28,7 +28,7 @@ public class ProductoServicioImpl implements ProductoServicio {
     @Override
     public ProductoResponseDto crear(ProductoRequestDto dto) {
         TipoProducto tipoProductoBuscado = tipoProductoRepositorio.findById(dto.idTipoProducto())
-                .orElseThrow(() -> new ExcepcionRecursoNoEncontrado(
+                .orElseThrow(() -> new RecursoNoEncontradoExcepcion(
                         "No se encontró el id " + dto.idTipoProducto()
                 ));
         Producto productoTraducido = ProductoMapper.toEntity(dto, tipoProductoBuscado);
@@ -45,7 +45,7 @@ public class ProductoServicioImpl implements ProductoServicio {
     @Override
     public ProductoResponseDto buscarPorId(Long idBuscado) {
         return productoRepositorio.findById(idBuscado).map(ProductoMapper::toResponseDto)
-                .orElseThrow(() -> new ExcepcionRecursoNoEncontrado("No se encontró el id " + idBuscado));
+                .orElseThrow(() -> new RecursoNoEncontradoExcepcion("No se encontró el id " + idBuscado));
     }
 
     @Override
@@ -56,9 +56,9 @@ public class ProductoServicioImpl implements ProductoServicio {
     @Override
     public ProductoResponseDto actualizar(Long idBuscado, ProductoRequestDto dto) {
         Producto productoBuscado = productoRepositorio.findById(idBuscado)
-                .orElseThrow(() -> new ExcepcionRecursoNoEncontrado("No se encontró el id " + idBuscado));
+                .orElseThrow(() -> new RecursoNoEncontradoExcepcion("No se encontró el id " + idBuscado));
         TipoProducto tipoProductoBuscado = tipoProductoRepositorio.findById(dto.idTipoProducto())
-                .orElseThrow(() -> new ExcepcionRecursoNoEncontrado(
+                .orElseThrow(() -> new RecursoNoEncontradoExcepcion(
                         "No se encontró el id " + dto.idTipoProducto()
                 ));
         ProductoMapper.actualizarEntidad(productoBuscado, dto, tipoProductoBuscado);
@@ -70,7 +70,7 @@ public class ProductoServicioImpl implements ProductoServicio {
     @Override
     public void eliminar(Long idBuscado) {
         Producto productoBuscado = productoRepositorio.findById(idBuscado)
-                .orElseThrow(() -> new ExcepcionRecursoNoEncontrado("No se encontró el id " + idBuscado));
+                .orElseThrow(() -> new RecursoNoEncontradoExcepcion("No se encontró el id " + idBuscado));
         productoRepositorio.delete(productoBuscado);
     }
 }

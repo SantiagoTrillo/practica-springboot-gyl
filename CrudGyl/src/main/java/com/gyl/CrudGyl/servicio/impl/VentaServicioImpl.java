@@ -1,36 +1,56 @@
 package com.gyl.CrudGyl.servicio.impl;
 
-import java.time.LocalDateTime;
-import java.util.List;
-
-import org.springframework.stereotype.Service;
-
+import com.gyl.CrudGyl.dto.DetalleVentaRequestDto;
 import com.gyl.CrudGyl.dto.VentaRequestDto;
 import com.gyl.CrudGyl.dto.VentaResponseDto;
 import com.gyl.CrudGyl.entidad.Cliente;
+import com.gyl.CrudGyl.entidad.DetalleVenta;
+import com.gyl.CrudGyl.entidad.Producto;
 import com.gyl.CrudGyl.entidad.Venta;
-import com.gyl.CrudGyl.excepcion.ExcepcionRecursoNoEncontrado;
+import com.gyl.CrudGyl.excepcion.RecursoDuplicadoExepcion;
+import com.gyl.CrudGyl.excepcion.RecursoInsuficienteExcepcion;
+import com.gyl.CrudGyl.excepcion.RecursoNoEncontradoExcepcion;
+import com.gyl.CrudGyl.mapper.DetalleVentaMapper;
 import com.gyl.CrudGyl.mapper.VentaMapper;
 import com.gyl.CrudGyl.repositorio.ClienteRepositorio;
+import com.gyl.CrudGyl.repositorio.ProductoRepositorio;
 import com.gyl.CrudGyl.repositorio.VentaRepositorio;
 import com.gyl.CrudGyl.servicio.VentaServicio;
+import jakarta.transaction.Transactional;
+import org.springframework.stereotype.Service;
+
+import java.time.LocalDateTime;
+import java.util.List;
 
 @Service
 public class VentaServicioImpl implements VentaServicio {
     private final VentaRepositorio ventaRepositorio;
     private final ClienteRepositorio clienteRepositorio;
+    private final ProductoRepositorio productoRepositorio;
 
-    public VentaServicioImpl(VentaRepositorio ventaRepositorio, ClienteRepositorio clienteRepositorio) {
+    public VentaServicioImpl(VentaRepositorio ventaRepositorio, ClienteRepositorio clienteRepositorio,
+                             ProductoRepositorio productoRepositorio) {
         this.ventaRepositorio = ventaRepositorio;
         this.clienteRepositorio = clienteRepositorio;
+        this.productoRepositorio = productoRepositorio;
     }
 
     @Override
-    public VentaResponseDto crear(VentaRequestDto dto) {
-        Cliente clienteBuscado = clienteRepositorio.findById(dto.idCliente())
-                .orElseThrow(() -> new ExcepcionRecursoNoEncontrado("No se encontró el id " + dto.idCliente()));
-        Venta ventaTraducida = VentaMapper.toEntity(dto, clienteBuscado);
-        Venta ventaGuardada = ventaRepositorio.save(ventaTraducida);
+    @Transactional
+    public VentaResponseDto crear(VentaRequestDto dtoVenta) {
+        Cliente comprador = obtenerCliente(dtoVenta.idCliente());
+
+        validarProductosUnicos(dtoVenta.detallesVenta());
+
+        Venta ventaTraducida = VentaMapper.toEntity(comprador);
+        List<DetalleVenta> detallesVenta = dtoVenta.detallesVenta().stream()
+                .map(dtoDetalle -> crearDetalleVenta(dtoDetalle, ventaTraducida)).toList();
+        Double totalCalculado = calcularTotal(detallesVenta);
+
+        ventaTraducida.setDetallesVenta(detallesVenta);
+        ventaTraducida.setTotal(totalCalculado);
+
+        Venta ventaGuardada = ventaRepositorio.saveAndFlush(ventaTraducida);
 
         return VentaMapper.toResponseDto(ventaGuardada);
     }
@@ -43,7 +63,9 @@ public class VentaServicioImpl implements VentaServicio {
     @Override
     public VentaResponseDto buscarPorId(Long idBuscado) {
         return ventaRepositorio.findById(idBuscado).map(VentaMapper::toResponseDto)
-                .orElseThrow(() -> new ExcepcionRecursoNoEncontrado("No se encontró el id " + idBuscado));
+                .orElseThrow(() -> new RecursoNoEncontradoExcepcion(
+                        "No se encontró la venta con el id " + idBuscado)
+                );
     }
 
     @Override
@@ -51,6 +73,63 @@ public class VentaServicioImpl implements VentaServicio {
         LocalDateTime inicioMinuto = fechaVentaBuscada.withSecond(0).withNano(0);
         LocalDateTime finMinuto = inicioMinuto.plusMinutes(1);
 
-        return ventaRepositorio.findByFechaVentaGreaterThanEqualAndFechaVentaLessThan(inicioMinuto, finMinuto).stream().map(VentaMapper::toResponseDto).toList();
+        return ventaRepositorio.findByFechaVentaGreaterThanEqualAndFechaVentaLessThan(
+                inicioMinuto, finMinuto
+        ).stream().map(VentaMapper::toResponseDto).toList();
+    }
+
+    private Cliente obtenerCliente(Long idBuscado) {
+        return clienteRepositorio.findById(idBuscado)
+                .orElseThrow(() -> new RecursoNoEncontradoExcepcion(
+                        "No se encontró el cliente con el id " + idBuscado)
+                );
+
+    }
+
+    private Producto obtenerProducto(Long idBuscado) {
+        return productoRepositorio.findById(idBuscado)
+                .orElseThrow(() -> new RecursoNoEncontradoExcepcion(
+                        "No se encontró el producto con el id " + idBuscado)
+                );
+    }
+
+    private void validarProductosUnicos(List<DetalleVentaRequestDto> detallesVenta) {
+        for (int i = 0; i < detallesVenta.size(); i++) {
+            Long idIterado = detallesVenta.get(i).idProducto();
+            for (int j = i + 1; j < detallesVenta.size(); j++) {
+                if (idIterado.equals(detallesVenta.get(j).idProducto())) {
+                    throw new RecursoDuplicadoExepcion(
+                            "El producto con id " + idIterado + " está repetido en la venta"
+                    );
+                }
+            }
+        }
+    }
+
+    private void validarStockDisponible(Producto producto, Integer cantidadSolicitada) {
+        if (producto.getStock() < cantidadSolicitada) {
+            throw new RecursoInsuficienteExcepcion(
+                    "No hay suficiente stock para el producto con el id " + producto.getId()
+            );
+        }
+        descontarStock(producto, cantidadSolicitada);
+    }
+
+    private DetalleVenta crearDetalleVenta(DetalleVentaRequestDto dtoDetalle, Venta ventaRecipiente) {
+        Producto productoComprado = obtenerProducto(dtoDetalle.idProducto());
+
+        validarStockDisponible(productoComprado, dtoDetalle.cantidadProducto());
+
+        Double subtotal = productoComprado.getPrecio() * dtoDetalle.cantidadProducto();
+
+        return DetalleVentaMapper.toEntity(dtoDetalle, ventaRecipiente, productoComprado, subtotal);
+    }
+
+    private Double calcularTotal(List<DetalleVenta> detallesVenta) {
+        return detallesVenta.stream().mapToDouble(DetalleVenta::getSubtotal).sum();
+    }
+
+    private void descontarStock(Producto productoActualizado, Integer cantidadDescontada) {
+        productoActualizado.setStock(productoActualizado.getStock() - cantidadDescontada);
     }
 }

@@ -28,6 +28,6 @@ public class Venta {
     @ManyToOne
     @JoinColumn(name = "id_cliente")
     private Cliente cliente;
-    @OneToMany(mappedBy = "venta")
+    @OneToMany(mappedBy = "venta", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<DetalleVenta> detallesVenta;
 }

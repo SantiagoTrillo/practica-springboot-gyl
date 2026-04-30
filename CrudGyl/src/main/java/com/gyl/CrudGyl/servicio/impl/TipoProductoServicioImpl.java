@@ -4,7 +4,7 @@ import java.util.List;
 
 import org.springframework.stereotype.Service;
 
-import com.gyl.CrudGyl.excepcion.ExcepcionRecursoNoEncontrado;
+import com.gyl.CrudGyl.excepcion.RecursoNoEncontradoExcepcion;
 import com.gyl.CrudGyl.servicio.TipoProductoServicio;
 import com.gyl.CrudGyl.dto.TipoProductoRequestDto;
 import com.gyl.CrudGyl.dto.TipoProductoResponseDto;
@@ -36,7 +36,7 @@ public class TipoProductoServicioImpl implements TipoProductoServicio {
     @Override
     public TipoProductoResponseDto buscarPorId(Long idBuscado) {
         return tipoProductoRepositorio.findById(idBuscado).map(TipoProductoMapper::toResponseDto)
-                .orElseThrow(() -> new ExcepcionRecursoNoEncontrado("No se encontró el id " + idBuscado));
+                .orElseThrow(() -> new RecursoNoEncontradoExcepcion("No se encontró el id " + idBuscado));
     }
 
     @Override
@@ -48,7 +48,7 @@ public class TipoProductoServicioImpl implements TipoProductoServicio {
     @Override
     public TipoProductoResponseDto actualizar(Long idBuscado, TipoProductoRequestDto dto) {
         TipoProducto tipoProductoBuscado = tipoProductoRepositorio.findById(idBuscado)
-                .orElseThrow(() -> new ExcepcionRecursoNoEncontrado("No se encontró el id " + idBuscado));
+                .orElseThrow(() -> new RecursoNoEncontradoExcepcion("No se encontró el id " + idBuscado));
         TipoProductoMapper.actualizarEntidad(tipoProductoBuscado, dto);
         TipoProducto tipoProductoActualizado = tipoProductoRepositorio.save(tipoProductoBuscado);
 
@@ -58,7 +58,7 @@ public class TipoProductoServicioImpl implements TipoProductoServicio {
     @Override
     public void eliminar(Long idBuscado) {
         TipoProducto tipoProductoBuscado = tipoProductoRepositorio.findById(idBuscado)
-                .orElseThrow(() -> new ExcepcionRecursoNoEncontrado("No se encontró el id " + idBuscado));
+                .orElseThrow(() -> new RecursoNoEncontradoExcepcion("No se encontró el id " + idBuscado));
         tipoProductoRepositorio.delete(tipoProductoBuscado);
     }
 }

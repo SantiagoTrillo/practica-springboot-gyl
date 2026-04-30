@@ -1,10 +1,10 @@
 package com.gyl.CrudGyl.servicio;
 
-import java.time.LocalDateTime;
-import java.util.List;
-
 import com.gyl.CrudGyl.dto.VentaRequestDto;
 import com.gyl.CrudGyl.dto.VentaResponseDto;
+
+import java.time.LocalDateTime;
+import java.util.List;
 
 public interface VentaServicio {
     VentaResponseDto crear(VentaRequestDto dto);

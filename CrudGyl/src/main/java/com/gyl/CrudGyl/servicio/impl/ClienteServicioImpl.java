@@ -7,7 +7,7 @@ import org.springframework.stereotype.Service;
 import com.gyl.CrudGyl.dto.ClienteRequestDto;
 import com.gyl.CrudGyl.dto.ClienteResponseDto;
 import com.gyl.CrudGyl.entidad.Cliente;
-import com.gyl.CrudGyl.excepcion.ExcepcionRecursoNoEncontrado;
+import com.gyl.CrudGyl.excepcion.RecursoNoEncontradoExcepcion;
 import com.gyl.CrudGyl.mapper.ClienteMapper;
 import com.gyl.CrudGyl.repositorio.ClienteRepositorio;
 import com.gyl.CrudGyl.servicio.ClienteServicio;
@@ -34,7 +34,7 @@ public class ClienteServicioImpl implements ClienteServicio {
     @Override
     public ClienteResponseDto buscarPorId(Long idBuscado) {
         return clienteRepositorio.findById(idBuscado).map(ClienteMapper::toResponseDto)
-                .orElseThrow(() -> new ExcepcionRecursoNoEncontrado("No se encontró el id " + idBuscado));
+                .orElseThrow(() -> new RecursoNoEncontradoExcepcion("No se encontró el id " + idBuscado));
     }
 
     @Override
@@ -45,7 +45,7 @@ public class ClienteServicioImpl implements ClienteServicio {
     @Override
     public ClienteResponseDto actualizar(Long idBuscado, ClienteRequestDto dto) {
         Cliente clienteBuscado = clienteRepositorio.findById(idBuscado)
-                .orElseThrow(() -> new ExcepcionRecursoNoEncontrado("No se encontró el id " + idBuscado));
+                .orElseThrow(() -> new RecursoNoEncontradoExcepcion("No se encontró el id " + idBuscado));
         ClienteMapper.actualizarEntidad(clienteBuscado, dto);
         Cliente clienteActualizado = clienteRepositorio.save(clienteBuscado);
 
@@ -55,7 +55,7 @@ public class ClienteServicioImpl implements ClienteServicio {
     @Override
     public void eliminar(Long idBuscado) {
         Cliente clienteBuscado = clienteRepositorio.findById(idBuscado)
-                .orElseThrow(() -> new ExcepcionRecursoNoEncontrado("No se encontró el id " + idBuscado));
+                .orElseThrow(() -> new RecursoNoEncontradoExcepcion("No se encontró el id " + idBuscado));
         clienteRepositorio.delete(clienteBuscado);
     }
 }
