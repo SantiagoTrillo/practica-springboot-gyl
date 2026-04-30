@@ -4,6 +4,7 @@ import java.time.LocalDateTime;
 import java.util.List;
 
 import jakarta.validation.Valid;
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
@@ -29,7 +30,7 @@ public class VentaControlador {
     public VentaResponseDto buscarPorId(@PathVariable Long idBuscado) {return ventaServicio.buscarPorId(idBuscado);}
 
     @GetMapping("/fecha")
-    public List<VentaResponseDto> buscarPorFechaVenta(@RequestParam LocalDateTime fechaVentaBuscada) {
+    public List<VentaResponseDto> buscarPorFechaVenta(@RequestParam("fechaVenta") @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm") LocalDateTime fechaVentaBuscada) {
         return ventaServicio.buscarPorFechaVenta(fechaVentaBuscada);
     }
 
