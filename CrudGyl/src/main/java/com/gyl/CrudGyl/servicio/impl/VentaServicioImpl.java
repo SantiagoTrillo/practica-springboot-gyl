@@ -48,25 +48,9 @@ public class VentaServicioImpl implements VentaServicio {
 
     @Override
         public List<VentaResponseDto> buscarPorFechaVenta(LocalDateTime fechaVentaBuscada) {
-        return ventaRepositorio.findByFechaVenta(fechaVentaBuscada).stream().map(VentaMapper::toResponseDto).toList();
-    }
+        LocalDateTime inicioMinuto = fechaVentaBuscada.withSecond(0).withNano(0);
+        LocalDateTime finMinuto = inicioMinuto.plusMinutes(1);
 
-    @Override
-    public VentaResponseDto actualizar(Long idBuscado, VentaRequestDto dto) {
-        Venta ventaBuscada = ventaRepositorio.findById(idBuscado)
-                .orElseThrow(() -> new ExcepcionRecursoNoEncontrado("No se encontró el id " + idBuscado));
-        Cliente clienteBuscado = clienteRepositorio.findById(dto.idCliente())
-                .orElseThrow(() -> new ExcepcionRecursoNoEncontrado("No se encontró el id " + dto.idCliente()));
-        VentaMapper.actualizarEntidad(ventaBuscada, dto, clienteBuscado);
-        Venta ventaGuardada = ventaRepositorio.save(ventaBuscada);
-
-        return VentaMapper.toResponseDto(ventaGuardada);
-    }
-
-    @Override
-    public void eliminar(Long idBuscado) {
-        Venta ventaBuscada = ventaRepositorio.findById(idBuscado)
-                .orElseThrow(() -> new ExcepcionRecursoNoEncontrado("No se encontró el id " + idBuscado));
-        ventaRepositorio.delete(ventaBuscada);
+        return ventaRepositorio.findByFechaVentaGreaterThanEqualAndFechaVentaLessThan(inicioMinuto, finMinuto).stream().map(VentaMapper::toResponseDto).toList();
     }
 }

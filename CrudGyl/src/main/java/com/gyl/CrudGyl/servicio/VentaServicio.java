@@ -14,8 +14,4 @@ public interface VentaServicio {
     VentaResponseDto buscarPorId(Long idBuscado);
 
     List<VentaResponseDto> buscarPorFechaVenta(LocalDateTime fechaVentaBuscada);
-
-    VentaResponseDto actualizar(Long idBuscado, VentaRequestDto dto);
-
-    void eliminar(Long idBuscado);
 }

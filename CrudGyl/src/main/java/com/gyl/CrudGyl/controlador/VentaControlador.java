@@ -33,13 +33,4 @@ public class VentaControlador {
     public List<VentaResponseDto> buscarPorFechaVenta(@RequestParam("fechaVenta") @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm") LocalDateTime fechaVentaBuscada) {
         return ventaServicio.buscarPorFechaVenta(fechaVentaBuscada);
     }
-
-    @PutMapping("/{idBuscado}")
-    public VentaResponseDto actualizar(@PathVariable Long idBuscado, @Valid @RequestBody VentaRequestDto dto) {
-        return ventaServicio.actualizar(idBuscado, dto);
-    }
-
-    @DeleteMapping("/{idBuscado}")
-    @ResponseStatus(HttpStatus.NO_CONTENT)
-    public void eliminar(@PathVariable Long idBuscado) {ventaServicio.eliminar(idBuscado);}
 }
