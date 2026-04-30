@@ -78,6 +78,12 @@ public class VentaServicioImpl implements VentaServicio {
         ).stream().map(VentaMapper::toResponseDto).toList();
     }
 
+    @Override
+    public List<VentaResponseDto> buscarPorRangoFechaVenta(LocalDateTime inicioRango, LocalDateTime finRango) {
+        return ventaRepositorio.findByFechaVentaBetween(inicioRango, finRango).stream().map(VentaMapper::toResponseDto)
+                .toList();
+    }
+
     private Cliente obtenerCliente(Long idBuscado) {
         return clienteRepositorio.findById(idBuscado)
                 .orElseThrow(() -> new RecursoNoEncontradoExcepcion(

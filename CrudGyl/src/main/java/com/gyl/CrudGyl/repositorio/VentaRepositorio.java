@@ -1,14 +1,15 @@
 package com.gyl.CrudGyl.repositorio;
 
-import java.time.LocalDateTime;
-import java.util.List;
-
+import com.gyl.CrudGyl.entidad.Venta;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
-import com.gyl.CrudGyl.entidad.Venta;
+import java.time.LocalDateTime;
+import java.util.List;
 
 @Repository
 public interface VentaRepositorio extends JpaRepository<Venta, Long> {
-    List<Venta> findByFechaVentaGreaterThanEqualAndFechaVentaLessThan(LocalDateTime inicioMinuto, LocalDateTime finMinuto);
+    List<Venta> findByFechaVentaGreaterThanEqualAndFechaVentaLessThan(LocalDateTime inicioMinuto,
+                                                                      LocalDateTime finMinuto);
+    List<Venta> findByFechaVentaBetween(LocalDateTime inicioRango, LocalDateTime finRango);
 }

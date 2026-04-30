@@ -14,4 +14,6 @@ public interface VentaServicio {
     VentaResponseDto buscarPorId(Long idBuscado);
 
     List<VentaResponseDto> buscarPorFechaVenta(LocalDateTime fechaVentaBuscada);
+
+    List<VentaResponseDto> buscarPorRangoFechaVenta(LocalDateTime inicioRango, LocalDateTime finRango);
 }

@@ -1,16 +1,15 @@
 package com.gyl.CrudGyl.controlador;
 
-import java.time.LocalDateTime;
-import java.util.List;
-
+import com.gyl.CrudGyl.dto.VentaRequestDto;
+import com.gyl.CrudGyl.dto.VentaResponseDto;
+import com.gyl.CrudGyl.servicio.VentaServicio;
 import jakarta.validation.Valid;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
-import com.gyl.CrudGyl.dto.VentaRequestDto;
-import com.gyl.CrudGyl.dto.VentaResponseDto;
-import com.gyl.CrudGyl.servicio.VentaServicio;
+import java.time.LocalDateTime;
+import java.util.List;
 
 @RestController
 @RequestMapping("/api/ventas")
@@ -30,7 +29,17 @@ public class VentaControlador {
     public VentaResponseDto buscarPorId(@PathVariable Long idBuscado) {return ventaServicio.buscarPorId(idBuscado);}
 
     @GetMapping("/fecha")
-    public List<VentaResponseDto> buscarPorFechaVenta(@RequestParam("fechaVenta") @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm") LocalDateTime fechaVentaBuscada) {
+    public List<VentaResponseDto> buscarPorFechaVenta(
+            @RequestParam("fechaVenta") @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm") LocalDateTime fechaVentaBuscada
+    ) {
         return ventaServicio.buscarPorFechaVenta(fechaVentaBuscada);
+    }
+
+    @GetMapping("/fecha/rango")
+    public List<VentaResponseDto> buscarPorRangoFecha(
+            @RequestParam("desde") @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm") LocalDateTime inicioRango,
+            @RequestParam("hasta") @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm") LocalDateTime finRango
+    ) {
+        return ventaServicio.buscarPorRangoFechaVenta(inicioRango, finRango);
     }
 }
