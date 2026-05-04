@@ -48,6 +48,7 @@ public class ManejadorGlobalExcepciones {
         return new ResponseEntity<>(respuesta, HttpStatus.BAD_REQUEST);
     }
 
+    @ExceptionHandler(IllegalArgumentException.class)
     public ResponseEntity<Map<String, Object>> manejarIllegalArgument(IllegalArgumentException excepcion) {
         Map <String, Object> respuesta = new HashMap<>();
 
@@ -59,6 +60,7 @@ public class ManejadorGlobalExcepciones {
         return new ResponseEntity<>(respuesta, HttpStatus.BAD_REQUEST);
     }
 
+    @ExceptionHandler(IllegalStateException.class)
     public ResponseEntity<Map<String, Object>> manejarIllegalState(IllegalStateException excepcion) {
         Map <String, Object> respuesta = new HashMap<>();
 
@@ -70,6 +72,7 @@ public class ManejadorGlobalExcepciones {
         return new ResponseEntity<>(respuesta, HttpStatus.CONFLICT);
     }
 
+    @ExceptionHandler(NoSuchElementException.class)
     public ResponseEntity<Map<String, Object>> manejarNoSuchElement(NoSuchElementException excepcion) {
         Map <String, Object> respuesta = new HashMap<>();
 
@@ -81,6 +84,7 @@ public class ManejadorGlobalExcepciones {
         return new ResponseEntity<>(respuesta, HttpStatus.NOT_FOUND);
     }
 
+    @ExceptionHandler(Exception.class)
     public ResponseEntity<Map<String, Object>> manejarGeneral(Exception excepcion) {
         Map <String, Object> respuesta = new HashMap<>();
 
