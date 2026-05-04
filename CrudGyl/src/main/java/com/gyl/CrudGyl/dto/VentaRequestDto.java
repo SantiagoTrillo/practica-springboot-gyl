@@ -10,7 +10,6 @@ public record VentaRequestDto(
         @NotNull(message = "El id del cliente es obligatorio")
         @Positive(message = "El id del cliente debe ser positivo.")
         Long idCliente,
-        @NotNull(message = "La lista de detalles es obligatoria")
-        @NotEmpty(message = "La lista de detalles no puede estar vacía")
+        @NotEmpty(message = "La lista de detalles es obligatoria y no puede estar vacía")
         List<DetalleVentaRequestDto> detallesVenta
 ) {}
