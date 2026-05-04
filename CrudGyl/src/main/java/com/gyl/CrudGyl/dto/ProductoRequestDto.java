@@ -9,9 +9,9 @@ public record ProductoRequestDto(
         @DecimalMin(value = "0.1", message = "El precio no puede ser negativo")
         Double precio,
         @NotNull(message = "El stock es obligatorio")
-        @Positive(message = "El stock debe ser positivo.")
+        @Min(value = 0, message = "El stock no puede ser negativo")
         Integer stock,
         @NotNull(message = "El id del tipo de producto es obligatorio")
-        @Min(value = 1, message = "El id del tipo de producto no puede ser negativo")
+        @Positive(message = "El id del tipo de producto debe ser positivo.")
         Long idTipoProducto
 ) {}
