@@ -1,7 +1,7 @@
 package com.gyl.CrudGyl.controlador;
 
-import com.gyl.CrudGyl.dto.VentaRequestDto;
-import com.gyl.CrudGyl.dto.VentaResponseDto;
+import com.gyl.CrudGyl.dto.request.VentaRequestDto;
+import com.gyl.CrudGyl.dto.response.VentaResponseDto;
 import com.gyl.CrudGyl.servicio.VentaServicio;
 import jakarta.validation.Valid;
 import org.springframework.format.annotation.DateTimeFormat;

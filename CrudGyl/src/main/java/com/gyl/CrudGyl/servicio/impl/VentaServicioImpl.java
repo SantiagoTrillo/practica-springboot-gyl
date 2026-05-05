@@ -1,8 +1,8 @@
 package com.gyl.CrudGyl.servicio.impl;
 
-import com.gyl.CrudGyl.dto.DetalleVentaRequestDto;
-import com.gyl.CrudGyl.dto.VentaRequestDto;
-import com.gyl.CrudGyl.dto.VentaResponseDto;
+import com.gyl.CrudGyl.dto.request.DetalleVentaRequestDto;
+import com.gyl.CrudGyl.dto.request.VentaRequestDto;
+import com.gyl.CrudGyl.dto.response.VentaResponseDto;
 import com.gyl.CrudGyl.entidad.Cliente;
 import com.gyl.CrudGyl.entidad.DetalleVenta;
 import com.gyl.CrudGyl.entidad.Producto;
@@ -73,9 +73,8 @@ public class VentaServicioImpl implements VentaServicio {
         LocalDateTime inicioMinuto = fechaVentaBuscada.withSecond(0).withNano(0);
         LocalDateTime finMinuto = inicioMinuto.plusMinutes(1);
 
-        return ventaRepositorio.findByFechaVentaGreaterThanEqualAndFechaVentaLessThan(
-                inicioMinuto, finMinuto
-        ).stream().map(VentaMapper::toResponseDto).toList();
+        return ventaRepositorio.findByFechaVentaGreaterThanEqualAndFechaVentaLessThan(inicioMinuto, finMinuto)
+                .stream().map(VentaMapper::toResponseDto).toList();
     }
 
     @Override

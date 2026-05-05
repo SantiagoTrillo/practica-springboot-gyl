@@ -1,9 +1,9 @@
 package com.gyl.CrudGyl.servicio;
 
-import java.util.List;
+import com.gyl.CrudGyl.dto.request.ProductoRequestDto;
+import com.gyl.CrudGyl.dto.response.ProductoResponseDto;
 
-import com.gyl.CrudGyl.dto.ProductoRequestDto;
-import com.gyl.CrudGyl.dto.ProductoResponseDto;
+import java.util.List;
 
 public interface ProductoServicio {
     ProductoResponseDto crear(ProductoRequestDto dto);

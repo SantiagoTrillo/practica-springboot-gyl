@@ -1,4 +1,4 @@
-package com.gyl.CrudGyl.dto;
+package com.gyl.CrudGyl.dto.response;
 
 import java.time.LocalDateTime;
 import java.util.List;

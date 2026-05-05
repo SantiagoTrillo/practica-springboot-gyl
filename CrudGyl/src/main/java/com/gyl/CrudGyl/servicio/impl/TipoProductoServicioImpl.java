@@ -1,16 +1,15 @@
 package com.gyl.CrudGyl.servicio.impl;
 
-import java.util.List;
-
-import org.springframework.stereotype.Service;
-
-import com.gyl.CrudGyl.excepcion.RecursoNoEncontradoExcepcion;
-import com.gyl.CrudGyl.servicio.TipoProductoServicio;
-import com.gyl.CrudGyl.dto.TipoProductoRequestDto;
-import com.gyl.CrudGyl.dto.TipoProductoResponseDto;
+import com.gyl.CrudGyl.dto.request.TipoProductoRequestDto;
+import com.gyl.CrudGyl.dto.response.TipoProductoResponseDto;
 import com.gyl.CrudGyl.entidad.TipoProducto;
+import com.gyl.CrudGyl.excepcion.RecursoNoEncontradoExcepcion;
 import com.gyl.CrudGyl.mapper.TipoProductoMapper;
 import com.gyl.CrudGyl.repositorio.TipoProductoRepositorio;
+import com.gyl.CrudGyl.servicio.TipoProductoServicio;
+import org.springframework.stereotype.Service;
+
+import java.util.List;
 
 @Service
 public class TipoProductoServicioImpl implements TipoProductoServicio {

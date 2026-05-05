@@ -1,14 +1,13 @@
 package com.gyl.CrudGyl.controlador;
 
-import java.util.List;
-
+import com.gyl.CrudGyl.dto.request.ClienteRequestDto;
+import com.gyl.CrudGyl.dto.response.ClienteResponseDto;
+import com.gyl.CrudGyl.servicio.ClienteServicio;
 import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
-import com.gyl.CrudGyl.dto.ClienteRequestDto;
-import com.gyl.CrudGyl.dto.ClienteResponseDto;
-import com.gyl.CrudGyl.servicio.ClienteServicio;
+import java.util.List;
 
 @RestController
 @RequestMapping("/api/clientes")

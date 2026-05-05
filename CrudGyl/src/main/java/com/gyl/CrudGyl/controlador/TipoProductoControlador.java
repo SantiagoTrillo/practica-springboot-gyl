@@ -1,14 +1,13 @@
 package com.gyl.CrudGyl.controlador;
 
-import java.util.List;
-
+import com.gyl.CrudGyl.dto.request.TipoProductoRequestDto;
+import com.gyl.CrudGyl.dto.response.TipoProductoResponseDto;
+import com.gyl.CrudGyl.servicio.TipoProductoServicio;
 import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
-import com.gyl.CrudGyl.dto.TipoProductoRequestDto;
-import com.gyl.CrudGyl.dto.TipoProductoResponseDto;
-import com.gyl.CrudGyl.servicio.TipoProductoServicio;
+import java.util.List;
 
 @RestController
 @RequestMapping("/api/tipos_producto")

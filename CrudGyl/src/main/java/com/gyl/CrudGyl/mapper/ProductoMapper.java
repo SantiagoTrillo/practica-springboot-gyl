@@ -1,7 +1,7 @@
 package com.gyl.CrudGyl.mapper;
 
-import com.gyl.CrudGyl.dto.ProductoRequestDto;
-import com.gyl.CrudGyl.dto.ProductoResponseDto;
+import com.gyl.CrudGyl.dto.request.ProductoRequestDto;
+import com.gyl.CrudGyl.dto.response.ProductoResponseDto;
 import com.gyl.CrudGyl.entidad.Producto;
 import com.gyl.CrudGyl.entidad.TipoProducto;
 
@@ -21,7 +21,8 @@ public class ProductoMapper {
 
     public static ProductoResponseDto toResponseDto(Producto producto) {
         Long idTipoProducto = producto.getTipoProducto() != null ? producto.getTipoProducto().getId() : null;
-        return new ProductoResponseDto(producto.getId(), producto.getNombre(), producto.getPrecio(), producto.getStock(), idTipoProducto);
+        return new ProductoResponseDto(producto.getId(), producto.getNombre(), producto.getPrecio(),
+                                       producto.getStock(), idTipoProducto);
     }
 
     public static void actualizarEntidad(Producto producto, ProductoRequestDto dto, TipoProducto tipoProducto) {

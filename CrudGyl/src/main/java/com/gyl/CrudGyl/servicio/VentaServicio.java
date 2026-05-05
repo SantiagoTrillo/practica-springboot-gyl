@@ -1,7 +1,7 @@
 package com.gyl.CrudGyl.servicio;
 
-import com.gyl.CrudGyl.dto.VentaRequestDto;
-import com.gyl.CrudGyl.dto.VentaResponseDto;
+import com.gyl.CrudGyl.dto.request.VentaRequestDto;
+import com.gyl.CrudGyl.dto.response.VentaResponseDto;
 
 import java.time.LocalDateTime;
 import java.util.List;
