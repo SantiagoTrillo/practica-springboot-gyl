@@ -78,18 +78,24 @@ public class VentaServicioImpl implements VentaServicio {
     }
 
     @Override
-        public List<VentaResponseDto> buscarPorFechaVenta(LocalDateTime fechaVentaBuscada) {
+    public List<VentaResponseDto> buscarPorFechaVenta(LocalDateTime fechaVentaBuscada) {
         LocalDateTime inicioMinuto = fechaVentaBuscada.withSecond(0).withNano(0);
         LocalDateTime finMinuto = inicioMinuto.plusMinutes(1);
 
-        return ventaRepositorio.findByFechaVentaGreaterThanEqualAndFechaVentaLessThan(inicioMinuto, finMinuto)
-                .stream().map(VentaMapper::toResponseDto).toList();
+        return mapearVentasAResponseDto(obtenerVentas(inicioMinuto, finMinuto));
     }
 
     @Override
     public List<VentaResponseDto> buscarPorRangoFechaVenta(LocalDateTime inicioRango, LocalDateTime finRango) {
-        return ventaRepositorio.findByFechaVentaBetween(inicioRango, finRango).stream().map(VentaMapper::toResponseDto)
-                .toList();
+        return mapearVentasAResponseDto(obtenerVentas(inicioRango, finRango));
+    }
+
+    private List<Venta> obtenerVentas(LocalDateTime inicioFecha, LocalDateTime finFecha) {
+        return ventaRepositorio.findByFechaVentaBetween(inicioFecha, finFecha);
+    }
+
+    private List<VentaResponseDto> mapearVentasAResponseDto(List<Venta> ventas) {
+        return ventas.stream().map(VentaMapper::toResponseDto).toList();
     }
 
     private Cliente obtenerCliente(Long idBuscado) {
