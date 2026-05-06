@@ -20,6 +20,7 @@ import jakarta.transaction.Transactional;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -45,8 +46,14 @@ public class VentaServicioImpl implements VentaServicio {
         validarProductosUnicos(dtoVenta.detallesVenta());
 
         Venta ventaTraducida = VentaMapper.toEntity(comprador);
-        List<DetalleVenta> detallesVenta = dtoVenta.detallesVenta().stream()
-                .map(dtoDetalle -> crearDetalleVenta(dtoDetalle, ventaTraducida)).toList();
+
+        List<DetalleVenta> detallesVenta = new ArrayList<>();
+
+        for (DetalleVentaRequestDto dtoDetalle : dtoVenta.detallesVenta()) {
+            DetalleVenta detalleNuevo = crearDetalleVenta(dtoDetalle, ventaTraducida);
+            detallesVenta.add(detalleNuevo);
+        }
+
         Double totalCalculado = calcularTotal(detallesVenta);
 
         ventaTraducida.setDetallesVenta(detallesVenta);

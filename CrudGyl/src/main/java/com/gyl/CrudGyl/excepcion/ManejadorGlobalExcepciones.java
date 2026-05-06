@@ -1,5 +1,6 @@
 package com.gyl.CrudGyl.excepcion;
 
+import com.gyl.CrudGyl.dto.response.ErrorResponseDto;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.converter.HttpMessageNotReadableException;
@@ -20,178 +21,111 @@ import java.util.NoSuchElementException;
 
 @RestControllerAdvice
 public class ManejadorGlobalExcepciones {
+    private ResponseEntity<ErrorResponseDto> construirError(String error, String mensaje, HttpStatus status) {
+        return ResponseEntity.status(status).body(
+                new ErrorResponseDto(error, mensaje, status.value(), LocalDateTime.now())
+        );
+    }
+
     @ExceptionHandler(RecursoNoEncontradoExcepcion.class)
-    public ResponseEntity<Map<String, Object>> manejarNoEncontrado(RecursoNoEncontradoExcepcion excepcion) {
-        Map <String, Object> respuesta = new HashMap<>();
-
-        respuesta.put("Error", "Recurso no encontrado");
-        respuesta.put("Mensaje", excepcion.getMessage());
-        respuesta.put("Estado", HttpStatus.NOT_FOUND.value());
-        respuesta.put("Fecha", LocalDateTime.now());
-
-        return new ResponseEntity<>(respuesta, HttpStatus.NOT_FOUND);
+    public ResponseEntity<ErrorResponseDto> manejarNoEncontrado(RecursoNoEncontradoExcepcion excepcion) {
+        return construirError("Recurso no encontrado", excepcion.getMessage(), HttpStatus.NOT_FOUND);
     }
 
     @ExceptionHandler(RecursoInsuficienteExcepcion.class)
-    public ResponseEntity<Map<String, Object>> manejarInsuficiente(RecursoInsuficienteExcepcion excepcion) {
-        Map <String, Object> respuesta = new HashMap<>();
-
-        respuesta.put("Error", "Recurso insuficiente");
-        respuesta.put("Mensaje", excepcion.getMessage());
-        respuesta.put("Estado", HttpStatus.CONFLICT.value());
-        respuesta.put("Fecha", LocalDateTime.now());
-
-        return new ResponseEntity<>(respuesta, HttpStatus.CONFLICT);
+    public ResponseEntity<ErrorResponseDto> manejarInsuficiente(RecursoInsuficienteExcepcion excepcion) {
+        return construirError("Recurso insuficiente", excepcion.getMessage(), HttpStatus.CONFLICT);
     }
 
     @ExceptionHandler(RecursoDuplicadoExcepcion.class)
-    public ResponseEntity<Map<String, Object>> manejarDuplicado(RecursoDuplicadoExcepcion excepcion) {
-        Map <String, Object> respuesta = new HashMap<>();
-
-        respuesta.put("Error", "Recurso duplicado");
-        respuesta.put("Mensaje", excepcion.getMessage());
-        respuesta.put("Estado", HttpStatus.BAD_REQUEST.value());
-        respuesta.put("Fecha", LocalDateTime.now());
-
-        return new ResponseEntity<>(respuesta, HttpStatus.BAD_REQUEST);
+    public ResponseEntity<ErrorResponseDto> manejarDuplicado(RecursoDuplicadoExcepcion excepcion) {
+        return construirError("Recurso duplicado", excepcion.getMessage(), HttpStatus.BAD_REQUEST);
     }
 
-    @ExceptionHandler(MethodArgumentNotValidException.class)
-    public ResponseEntity<Map<String, Object>> manejarMethodArgumentNotValid(MethodArgumentNotValidException excepcion) {
-        Map <String, String> errores = new HashMap<>();
-
-        for (FieldError error : excepcion.getBindingResult().getFieldErrors()) {
-            errores.put(error.getField(), error.getDefaultMessage());
-        }
-
-        Map <String, Object> respuesta = new HashMap<>();
-
-        respuesta.put("Error", "Error de validación en el cuerpo de la solicitud");
-        respuesta.put("Mensaje", excepcion.getMessage());
-        respuesta.put("Detalles", errores);
-        respuesta.put("Estado", HttpStatus.BAD_REQUEST.value());
-        respuesta.put("Fecha", LocalDateTime.now());
-
-        return new ResponseEntity<>(respuesta, HttpStatus.BAD_REQUEST);
-    }
+//    @ExceptionHandler(MethodArgumentNotValidException.class)
+//    public ResponseEntity<ErrorResponseDto> manejarMethodArgumentNotValid(MethodArgumentNotValidException excepcion) {
+//        Map<String, String> errores = new HashMap<>();
+//        for (FieldError error : excepcion.getBindingResult().getFieldErrors()) {
+//            errores.put(error.getField(), error.getDefaultMessage());
+//        }
+//
+//        return construirError(
+//                excepcion.getMessage(),
+//                errores
+//        );
+//    }
 
     @ExceptionHandler(HttpMessageNotReadableException.class)
-    public ResponseEntity<Map<String, Object>> manejarHttpMessageNotReadable(HttpMessageNotReadableException excepcion) {
-        Map <String, Object> respuesta = new HashMap<>();
-
-        respuesta.put("Error", "El cuerpo JSON es inválido o tiene formato incorrecto");
-        respuesta.put("Mensaje", excepcion.getMessage());
-        respuesta.put("Estado", HttpStatus.BAD_REQUEST.value());
-        respuesta.put("Fecha", LocalDateTime.now());
-
-        return new ResponseEntity<>(respuesta, HttpStatus.BAD_REQUEST);
+    public ResponseEntity<ErrorResponseDto> manejarHttpMessageNotReadable(HttpMessageNotReadableException excepcion) {
+        return construirError(
+                "El cuerpo JSON es inválido o tiene formato incorrecto", excepcion.getMessage(),
+                HttpStatus.BAD_REQUEST
+        );
     }
 
     @ExceptionHandler(MethodArgumentTypeMismatchException.class)
-    public ResponseEntity<Map<String, Object>> manejarMethodArgumentTypeMismatch(MethodArgumentTypeMismatchException excepcion) {
-        Map <String, Object> respuesta = new HashMap<>();
-
-        respuesta.put("Error", "Parámetro con tipo inválido");
-        respuesta.put("Mensaje", excepcion.getMessage());
-        respuesta.put("Estado", HttpStatus.BAD_REQUEST.value());
-        respuesta.put("Fecha", LocalDateTime.now());
-
-        return new ResponseEntity<>(respuesta, HttpStatus.BAD_REQUEST);
+    public ResponseEntity<ErrorResponseDto> manejarMethodArgumentTypeMismatch(
+            MethodArgumentTypeMismatchException excepcion
+    ) {
+        return construirError("Parámetro con tipo inválido", excepcion.getMessage(), HttpStatus.BAD_REQUEST);
     }
 
     @ExceptionHandler(MissingServletRequestParameterException.class)
-    public ResponseEntity<Map<String, Object>> manejarMissingServletRequestParameter(MissingServletRequestParameterException excepcion) {
-        Map <String, Object> respuesta = new HashMap<>();
-
-        respuesta.put("Error", "Falta un parámetro obligatorio en la URL");
-        respuesta.put("Mensaje", excepcion.getMessage());
-        respuesta.put("Estado", HttpStatus.BAD_REQUEST.value());
-        respuesta.put("Fecha", LocalDateTime.now());
-
-        return new ResponseEntity<>(respuesta, HttpStatus.BAD_REQUEST);
+    public ResponseEntity<ErrorResponseDto> manejarMissingServletRequestParameter(
+            MissingServletRequestParameterException excepcion
+    ) {
+        return construirError(
+                "Falta un parámetro obligatorio en la URL", excepcion.getMessage(), HttpStatus.BAD_REQUEST
+        );
     }
 
     @ExceptionHandler(HttpRequestMethodNotSupportedException.class)
-    public ResponseEntity<Map<String, Object>> manejarHttpRequestMethodNotSupported(HttpRequestMethodNotSupportedException excepcion) {
-        Map <String, Object> respuesta = new HashMap<>();
-
-        respuesta.put("Error", "Método HTTP no permitido para este endpoint");
-        respuesta.put("Mensaje", excepcion.getMessage());
-        respuesta.put("Estado", HttpStatus.METHOD_NOT_ALLOWED.value());
-        respuesta.put("Fecha", LocalDateTime.now());
-
-        return new ResponseEntity<>(respuesta, HttpStatus.METHOD_NOT_ALLOWED);
+    public ResponseEntity<ErrorResponseDto> manejarHttpRequestMethodNotSupported(
+            HttpRequestMethodNotSupportedException excepcion
+    ) {
+        return construirError(
+                "Método HTTP no permitido para este endpoint", excepcion.getMessage(),
+                HttpStatus.METHOD_NOT_ALLOWED
+        );
     }
 
     @ExceptionHandler(HttpMediaTypeNotSupportedException.class)
-    public ResponseEntity<Map<String, Object>> manejarHttpMediaTypeNotSupportedException(HttpMediaTypeNotSupportedException excepcion) {
-        Map <String, Object> respuesta = new HashMap<>();
-
-        respuesta.put("Error", "Formato de texto no soportado. Usá JSON");
-        respuesta.put("Mensaje", excepcion.getMessage());
-        respuesta.put("Estado", HttpStatus.UNSUPPORTED_MEDIA_TYPE.value());
-        respuesta.put("Fecha", LocalDateTime.now());
-
-        return new ResponseEntity<>(respuesta, HttpStatus.UNSUPPORTED_MEDIA_TYPE);
+    public ResponseEntity<ErrorResponseDto> manejarHttpMediaTypeNotSupportedException(
+            HttpMediaTypeNotSupportedException excepcion
+    ) {
+        return construirError(
+                "Formato de texto no soportado. Usá JSON", excepcion.getMessage(),
+                HttpStatus.UNSUPPORTED_MEDIA_TYPE
+        );
     }
 
     @ExceptionHandler(NoHandlerFoundException.class)
-    public ResponseEntity<Map<String, Object>> manejarNoHandlerFound(NoHandlerFoundException  excepcion) {
-        Map <String, Object> respuesta = new HashMap<>();
-
-        respuesta.put("Error", "Endpoint no encontrado");
-        respuesta.put("Mensaje", excepcion.getMessage());
-        respuesta.put("Estado", HttpStatus.NOT_FOUND.value());
-        respuesta.put("Fecha", LocalDateTime.now());
-
-        return new ResponseEntity<>(respuesta, HttpStatus.NOT_FOUND);
+    public ResponseEntity<ErrorResponseDto> manejarNoHandlerFound(NoHandlerFoundException excepcion) {
+        return construirError("Endpoint no encontrado", excepcion.getMessage(), HttpStatus.NOT_FOUND);
     }
 
     @ExceptionHandler(IllegalArgumentException.class)
-    public ResponseEntity<Map<String, Object>> manejarIllegalArgument(IllegalArgumentException excepcion) {
-        Map <String, Object> respuesta = new HashMap<>();
-
-        respuesta.put("Error", "Argumento inválido");
-        respuesta.put("Mensaje", excepcion.getMessage());
-        respuesta.put("Estado", HttpStatus.BAD_REQUEST.value());
-        respuesta.put("Fecha", LocalDateTime.now());
-
-        return new ResponseEntity<>(respuesta, HttpStatus.BAD_REQUEST);
+    public ResponseEntity<ErrorResponseDto> manejarIllegalArgument(IllegalArgumentException excepcion) {
+        return construirError("Argumento inválido", excepcion.getMessage(), HttpStatus.BAD_REQUEST);
     }
 
     @ExceptionHandler(IllegalStateException.class)
-    public ResponseEntity<Map<String, Object>> manejarIllegalState(IllegalStateException excepcion) {
-        Map <String, Object> respuesta = new HashMap<>();
-
-        respuesta.put("Error", "El recurso está en un estado que impide la operación");
-        respuesta.put("Mensaje", excepcion.getMessage());
-        respuesta.put("Estado", HttpStatus.CONFLICT.value());
-        respuesta.put("Fecha", LocalDateTime.now());
-
-        return new ResponseEntity<>(respuesta, HttpStatus.CONFLICT);
+    public ResponseEntity<ErrorResponseDto> manejarIllegalState(IllegalStateException excepcion) {
+        return construirError(
+                "El recurso está en un estado que impide la operación", excepcion.getMessage(),
+                HttpStatus.CONFLICT
+        );
     }
 
     @ExceptionHandler(NoSuchElementException.class)
-    public ResponseEntity<Map<String, Object>> manejarNoSuchElement(NoSuchElementException excepcion) {
-        Map <String, Object> respuesta = new HashMap<>();
-
-        respuesta.put("Error", "Recurso inexistente");
-        respuesta.put("Mensaje", excepcion.getMessage());
-        respuesta.put("Estado", HttpStatus.NOT_FOUND.value());
-        respuesta.put("Fecha", LocalDateTime.now());
-
-        return new ResponseEntity<>(respuesta, HttpStatus.NOT_FOUND);
+    public ResponseEntity<ErrorResponseDto> manejarNoSuchElement(NoSuchElementException excepcion) {
+        return construirError("Recurso inexistente", excepcion.getMessage(), HttpStatus.NOT_FOUND);
     }
 
     @ExceptionHandler(Exception.class)
-    public ResponseEntity<Map<String, Object>> manejarGeneral(Exception excepcion) {
-        Map <String, Object> respuesta = new HashMap<>();
-
-        respuesta.put("Error", "Error interno del servidor");
-        respuesta.put("Mensaje", excepcion.getMessage());
-        respuesta.put("Estado", HttpStatus.INTERNAL_SERVER_ERROR.value());
-        respuesta.put("Fecha", LocalDateTime.now());
-
-        return new ResponseEntity<>(respuesta, HttpStatus.INTERNAL_SERVER_ERROR);
+    public ResponseEntity<ErrorResponseDto> manejarGeneral(Exception excepcion) {
+        return construirError(
+                "Error interno del servidor", excepcion.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR
+        );
     }
 }
