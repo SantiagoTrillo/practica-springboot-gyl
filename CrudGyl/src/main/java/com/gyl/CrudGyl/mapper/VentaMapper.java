@@ -16,7 +16,9 @@ public class VentaMapper {
     }
 
     public static VentaResponseDto toResponseDto(Venta venta) {
-        return new VentaResponseDto(venta.getId(), venta.getFechaVenta(), venta.getTotal(), venta.getCliente().getId(),
-                                    venta.getDetallesVenta().stream().map(DetalleVentaMapper::toResponseDto).toList());
+        return new VentaResponseDto(
+                venta.getId(), venta.getFechaVenta(), venta.getTotal(), venta.getCliente().getId(),
+                venta.getDetallesVenta().stream().map(DetalleVentaMapper::toResponseDto).toList()
+        );
     }
 }

@@ -9,7 +9,8 @@ import java.util.List;
 
 @Repository
 public interface VentaRepositorio extends JpaRepository<Venta, Long> {
-    List<Venta> findByFechaVentaGreaterThanEqualAndFechaVentaLessThan(LocalDateTime inicioMinuto,
-                                                                      LocalDateTime finMinuto);
+    List<Venta> findByFechaVentaGreaterThanEqualAndFechaVentaLessThan(
+            LocalDateTime inicioMinuto, LocalDateTime finMinuto
+    );
     List<Venta> findByFechaVentaBetween(LocalDateTime inicioRango, LocalDateTime finRango);
 }

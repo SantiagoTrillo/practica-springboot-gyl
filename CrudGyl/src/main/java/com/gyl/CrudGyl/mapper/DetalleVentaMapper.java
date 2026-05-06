@@ -22,8 +22,9 @@ public class DetalleVentaMapper {
     }
 
     public static DetalleVentaResponseDto toResponseDto(DetalleVenta detalleVenta) {
-        return new DetalleVentaResponseDto(detalleVenta.getId(), detalleVenta.getCantidadProducto(),
-                                           detalleVenta.getPrecioUnitario(), detalleVenta.getSubtotal(),
-                                           detalleVenta.getProducto().getId());
+        return new DetalleVentaResponseDto(
+                detalleVenta.getId(), detalleVenta.getCantidadProducto(), detalleVenta.getPrecioUnitario(),
+                detalleVenta.getSubtotal(), detalleVenta.getProducto().getId()
+        );
     }
 }

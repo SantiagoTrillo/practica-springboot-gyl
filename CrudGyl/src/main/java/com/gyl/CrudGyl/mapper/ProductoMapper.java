@@ -20,9 +20,10 @@ public class ProductoMapper {
     }
 
     public static ProductoResponseDto toResponseDto(Producto producto) {
-        Long idTipoProducto = producto.getTipoProducto() != null ? producto.getTipoProducto().getId() : null;
-        return new ProductoResponseDto(producto.getId(), producto.getNombre(), producto.getPrecio(),
-                                       producto.getStock(), idTipoProducto);
+        return new ProductoResponseDto(
+                producto.getId(), producto.getNombre(), producto.getPrecio(), producto.getStock(),
+                producto.getTipoProducto().getId()
+        );
     }
 
     public static void actualizarEntidad(Producto producto, ProductoRequestDto dto, TipoProducto tipoProducto) {

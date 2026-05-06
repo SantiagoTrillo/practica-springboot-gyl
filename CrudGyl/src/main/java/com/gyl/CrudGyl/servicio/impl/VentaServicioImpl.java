@@ -28,8 +28,10 @@ public class VentaServicioImpl implements VentaServicio {
     private final ClienteRepositorio clienteRepositorio;
     private final ProductoRepositorio productoRepositorio;
 
-    public VentaServicioImpl(VentaRepositorio ventaRepositorio, ClienteRepositorio clienteRepositorio,
-                             ProductoRepositorio productoRepositorio) {
+    public VentaServicioImpl(
+            VentaRepositorio ventaRepositorio, ClienteRepositorio clienteRepositorio,
+            ProductoRepositorio productoRepositorio
+    ) {
         this.ventaRepositorio = ventaRepositorio;
         this.clienteRepositorio = clienteRepositorio;
         this.productoRepositorio = productoRepositorio;
@@ -64,8 +66,8 @@ public class VentaServicioImpl implements VentaServicio {
     public VentaResponseDto buscarPorId(Long idBuscado) {
         return ventaRepositorio.findById(idBuscado).map(VentaMapper::toResponseDto)
                 .orElseThrow(() -> new RecursoNoEncontradoExcepcion(
-                        "No se encontró la venta con el id " + idBuscado)
-                );
+                        "No se encontró la venta con el id " + idBuscado
+                ));
     }
 
     @Override
@@ -86,21 +88,21 @@ public class VentaServicioImpl implements VentaServicio {
     private Cliente obtenerCliente(Long idBuscado) {
         return clienteRepositorio.findById(idBuscado)
                 .orElseThrow(() -> new RecursoNoEncontradoExcepcion(
-                        "No se encontró el cliente con el id " + idBuscado)
-                );
-
+                        "No se encontró el cliente con el id " + idBuscado
+                ));
     }
 
     private Producto obtenerProducto(Long idBuscado) {
         return productoRepositorio.findById(idBuscado)
                 .orElseThrow(() -> new RecursoNoEncontradoExcepcion(
-                        "No se encontró el producto con el id " + idBuscado)
-                );
+                        "No se encontró el producto con el id " + idBuscado
+                ));
     }
 
     private void validarProductosUnicos(List<DetalleVentaRequestDto> detallesVenta) {
         for (int i = 0; i < detallesVenta.size(); i++) {
             Long idIterado = detallesVenta.get(i).idProducto();
+
             for (int j = i + 1; j < detallesVenta.size(); j++) {
                 if (idIterado.equals(detallesVenta.get(j).idProducto())) {
                     throw new RecursoDuplicadoExcepcion(
@@ -117,6 +119,7 @@ public class VentaServicioImpl implements VentaServicio {
                     "No hay suficiente stock para el producto con el id " + producto.getId()
             );
         }
+
         descontarStock(producto, cantidadSolicitada);
     }
 

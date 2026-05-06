@@ -33,7 +33,9 @@ public class ClienteServicioImpl implements ClienteServicio {
     @Override
     public ClienteResponseDto buscarPorId(Long idBuscado) {
         return clienteRepositorio.findById(idBuscado).map(ClienteMapper::toResponseDto)
-                .orElseThrow(() -> new RecursoNoEncontradoExcepcion("No se encontró el id " + idBuscado));
+                .orElseThrow(() -> new RecursoNoEncontradoExcepcion(
+                        "No se encontró el cliente con id " + idBuscado
+                ));
     }
 
     @Override
@@ -44,8 +46,12 @@ public class ClienteServicioImpl implements ClienteServicio {
     @Override
     public ClienteResponseDto actualizar(Long idBuscado, ClienteRequestDto dto) {
         Cliente clienteBuscado = clienteRepositorio.findById(idBuscado)
-                .orElseThrow(() -> new RecursoNoEncontradoExcepcion("No se encontró el id " + idBuscado));
+                .orElseThrow(() -> new RecursoNoEncontradoExcepcion(
+                        "No se encontró el cliente con id " + idBuscado
+                ));
+
         ClienteMapper.actualizarEntidad(clienteBuscado, dto);
+
         Cliente clienteActualizado = clienteRepositorio.save(clienteBuscado);
 
         return ClienteMapper.toResponseDto(clienteActualizado);
@@ -54,7 +60,10 @@ public class ClienteServicioImpl implements ClienteServicio {
     @Override
     public void eliminar(Long idBuscado) {
         Cliente clienteBuscado = clienteRepositorio.findById(idBuscado)
-                .orElseThrow(() -> new RecursoNoEncontradoExcepcion("No se encontró el id " + idBuscado));
+                .orElseThrow(() -> new RecursoNoEncontradoExcepcion(
+                        "No se encontró el cliente con id " + idBuscado
+                ));
+
         clienteRepositorio.delete(clienteBuscado);
     }
 }

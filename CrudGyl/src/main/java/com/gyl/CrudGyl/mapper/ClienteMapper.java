@@ -20,8 +20,10 @@ public class ClienteMapper {
     }
 
     public static ClienteResponseDto toResponseDto (Cliente cliente) {
-        return new ClienteResponseDto(cliente.getId(), cliente.getNombre(), cliente.getApellido(), cliente.getCorreo(),
-                                      cliente.getTelefono(), cliente.getDireccion());
+        return new ClienteResponseDto(
+                cliente.getId(), cliente.getNombre(), cliente.getApellido(), cliente.getCorreo(), cliente.getTelefono(),
+                cliente.getDireccion()
+        );
     }
 
     public static void actualizarEntidad(Cliente cliente, ClienteRequestDto dto) {

@@ -35,7 +35,9 @@ public class TipoProductoServicioImpl implements TipoProductoServicio {
     @Override
     public TipoProductoResponseDto buscarPorId(Long idBuscado) {
         return tipoProductoRepositorio.findById(idBuscado).map(TipoProductoMapper::toResponseDto)
-                .orElseThrow(() -> new RecursoNoEncontradoExcepcion("No se encontró el id " + idBuscado));
+                .orElseThrow(() -> new RecursoNoEncontradoExcepcion(
+                        "No se encontró el tipo de producto con id" + idBuscado
+                ));
     }
 
     @Override
@@ -47,8 +49,12 @@ public class TipoProductoServicioImpl implements TipoProductoServicio {
     @Override
     public TipoProductoResponseDto actualizar(Long idBuscado, TipoProductoRequestDto dto) {
         TipoProducto tipoProductoBuscado = tipoProductoRepositorio.findById(idBuscado)
-                .orElseThrow(() -> new RecursoNoEncontradoExcepcion("No se encontró el id " + idBuscado));
+                .orElseThrow(() -> new RecursoNoEncontradoExcepcion(
+                        "No se encontró el tipo de producto con id " + idBuscado
+                ));
+
         TipoProductoMapper.actualizarEntidad(tipoProductoBuscado, dto);
+
         TipoProducto tipoProductoActualizado = tipoProductoRepositorio.save(tipoProductoBuscado);
 
         return TipoProductoMapper.toResponseDto(tipoProductoActualizado);
@@ -57,7 +63,10 @@ public class TipoProductoServicioImpl implements TipoProductoServicio {
     @Override
     public void eliminar(Long idBuscado) {
         TipoProducto tipoProductoBuscado = tipoProductoRepositorio.findById(idBuscado)
-                .orElseThrow(() -> new RecursoNoEncontradoExcepcion("No se encontró el id " + idBuscado));
+                .orElseThrow(() -> new RecursoNoEncontradoExcepcion(
+                        "No se encontró el tipo de producto con id " + idBuscado
+                ));
+
         tipoProductoRepositorio.delete(tipoProductoBuscado);
     }
 }
