@@ -22,6 +22,7 @@ import org.springframework.stereotype.Service;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 @Service
 public class VentaServicioImpl implements VentaServicio {
@@ -79,6 +80,8 @@ public class VentaServicioImpl implements VentaServicio {
 
     @Override
     public List<VentaResponseDto> buscarPorFechaVenta(LocalDateTime fechaVentaBuscada) {
+        Objects.requireNonNull(fechaVentaBuscada, "La fecha de venta no puede ser nula");
+        
         LocalDateTime inicioMinuto = fechaVentaBuscada.withSecond(0).withNano(0);
         LocalDateTime finMinuto = inicioMinuto.plusMinutes(1);
 
@@ -87,6 +90,9 @@ public class VentaServicioImpl implements VentaServicio {
 
     @Override
     public List<VentaResponseDto> buscarPorRangoFechaVenta(LocalDateTime inicioRango, LocalDateTime finRango) {
+        Objects.requireNonNull(inicioRango, "La fecha de inicio del rango no puede ser nula");
+        Objects.requireNonNull(finRango, "La fecha de fin del rango no puede ser nula");
+        
         return mapearVentasAResponseDto(obtenerVentas(inicioRango, finRango));
     }
 
@@ -152,5 +158,6 @@ public class VentaServicioImpl implements VentaServicio {
 
     private void descontarStock(Producto productoActualizado, Integer cantidadDescontada) {
         productoActualizado.setStock(productoActualizado.getStock() - cantidadDescontada);
+        productoRepositorio.save(productoActualizado);
     }
 }

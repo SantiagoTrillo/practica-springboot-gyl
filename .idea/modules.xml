@@ -2,7 +2,7 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
-      <module fileurl="file://$PROJECT_DIR$/.idea/crudGyl.iml" filepath="$PROJECT_DIR$/.idea/crudGyl.iml" />
+      <module fileurl="file://$PROJECT_DIR$/CrudGyl/crudGyl.iml" filepath="$PROJECT_DIR$/CrudGyl/crudGyl.iml" />
     </modules>
   </component>
 </project>
