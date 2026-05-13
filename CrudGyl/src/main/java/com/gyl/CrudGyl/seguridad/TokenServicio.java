@@ -5,6 +5,7 @@ import com.auth0.jwt.JWTVerifier;
 import com.auth0.jwt.algorithms.Algorithm;
 import com.auth0.jwt.exceptions.JWTVerificationException;
 import com.auth0.jwt.interfaces.DecodedJWT;
+import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 
@@ -22,7 +23,7 @@ public class TokenServicio {
     }
 
     private Instant crearFechaExpiracion() {
-        return LocalDateTime.now().plusMinutes(15).toInstant(ZoneOffset.UTC);
+        return LocalDateTime.now().plusMinutes(15).toInstant(ZoneOffset.ofHours(-3));
     }
 
     public String getUsernameFromToken(String token) {
@@ -31,7 +32,7 @@ public class TokenServicio {
             DecodedJWT tokenDecodificado = verificador.verify(token);
             return tokenDecodificado.getSubject();
         } catch (JWTVerificationException exception) {
-            throw new RuntimeException("Token inválido o expirado");
+            throw new BadCredentialsException("Token inválido o expirado");
         }
     }
 

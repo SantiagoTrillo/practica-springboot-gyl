@@ -4,6 +4,8 @@ import com.gyl.CrudGyl.dto.response.MensajeErrorResponseDto;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.converter.HttpMessageNotReadableException;
+import org.springframework.security.authentication.BadCredentialsException;
+import org.springframework.security.core.AuthenticationException;
 import org.springframework.web.HttpMediaTypeNotSupportedException;
 import org.springframework.web.HttpRequestMethodNotSupportedException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
@@ -31,6 +33,35 @@ public class ManejadorGlobalExcepciones {
         return ResponseEntity.status(status).body(
                 new MensajeErrorResponseDto(error, mensaje, status.value(), LocalDateTime.now(), detalles)
         );
+    }
+
+    private String manejarTipoErrorAutenticacion(AuthenticationException excepcion) {
+        String mensaje = excepcion.getMessage();
+
+        if (mensaje != null && mensaje.contains("Token inválido o expirado")) {
+            return "Token inválido";
+        }
+        if (mensaje != null && mensaje.equalsIgnoreCase("Bad credentials")) {
+            return "Credenciales inválidas";
+        }
+
+        return "Error de autenticación";
+    }
+
+    private String manejarMensajeAutenticacion(AuthenticationException excepcion) {
+        String mensaje = excepcion.getMessage();
+
+        if (mensaje == null || mensaje.isBlank() || mensaje.contains("Full authentication is required")) {
+            return "Falta enviar un token Bearer válido en la cabecera Authorization";
+        }
+        if (mensaje.equalsIgnoreCase("Bad credentials")) {
+            return "Usuario o contraseña incorrectos";
+        }
+        if (mensaje.contains("Token inválido o expirado")) {
+            return "El token es inválido o ya expiró";
+        }
+
+        return mensaje;
     }
 
     @ExceptionHandler(RecursoNoEncontradoExcepcion.class)
@@ -108,6 +139,18 @@ public class ManejadorGlobalExcepciones {
     @ExceptionHandler(NoHandlerFoundException.class)
     public ResponseEntity<MensajeErrorResponseDto> manejarNoHandlerFound(NoHandlerFoundException excepcion) {
         return construirError("Endpoint no encontrado", excepcion.getMessage(), HttpStatus.NOT_FOUND);
+    }
+
+    @ExceptionHandler(BadCredentialsException.class)
+    public ResponseEntity<MensajeErrorResponseDto> manejarBadCredentials(BadCredentialsException excepcion) {
+        return manejarAuthenticationEntryPoint(excepcion);
+    }
+
+    public ResponseEntity<MensajeErrorResponseDto> manejarAuthenticationEntryPoint(AuthenticationException excepcion) {
+        String error = manejarTipoErrorAutenticacion(excepcion);
+        String mensaje = manejarMensajeAutenticacion(excepcion);
+
+        return construirError(error, mensaje, HttpStatus.UNAUTHORIZED);
     }
 
     @ExceptionHandler(IllegalArgumentException.class)
